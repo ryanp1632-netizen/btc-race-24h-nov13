@@ -52,6 +52,8 @@ export interface Params {
   size: number;
   /** At most this many entries in the window. */
   maxEntries: number;
+  /** No new entry after this bar of the window: a late entry has no time left to reach its target. */
+  lastEntryBar: number;
   /** Bars to wait after an exit before the next entry. */
   cooldown: number;
   /** Stop opening trades once realised losses reach this many bps of starting equity (0 = never). */
@@ -82,6 +84,7 @@ export const DEFAULTS: Params = {
   maxHold: 480,
   size: 1,
   maxEntries: 4,
+  lastEntryBar: 100000,
   cooldown: 30,
   haltLossBps: 0,
 };
@@ -152,7 +155,7 @@ export class Strategy {
       return { kind: 'none' };
     }
 
-    if (this.n < p.warmBars || this.entries >= p.maxEntries) return { kind: 'none' };
+    if (this.n < p.warmBars || this.n > p.lastEntryBar || this.entries >= p.maxEntries) return { kind: 'none' };
     if (this.n - this.lastExitBar < p.cooldown) return { kind: 'none' };
     if (p.haltLossBps > 0 && -this.realised >= p.haltLossBps) return { kind: 'none' };
 

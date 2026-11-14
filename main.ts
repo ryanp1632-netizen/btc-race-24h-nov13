@@ -3,12 +3,14 @@
 // What it does, batch by batch:
 //   1. A probe: buys 1.234567 USDC of cbBTC on the first batch and sells it on the next, so the
 //      window always has at least one trade (the guardrail) at a cost of a fraction of a cent.
-//   2. Then it waits. It only buys after a capitulation that is already turning: some bar of the
-//      last few hours flushed far under the slow EMA, and the close has climbed back over a fast
-//      EMA while still under the slow one. Most days that never happens and the bot stays in cash.
-//   3. Exits: trailing stop once in profit, a hard stop, a time stop; no new entry after a loss.
+//   2. Then it waits for one bounce: the close at least 1% under the 1-hour EMA and already 0.2%
+//      off its 20-bar low. It buys with (almost) all its cash, once per window, and never in the
+//      last 4 hours.
+//   3. Exit: +70 bps take-profit, -350 bps stop, otherwise held to the window's end.
+//      Only the top 10 are paid, so the bot plays for the likeliest +6 USDC, not the best average.
 //
-// The rules live in strategy.ts (shared with the offline backtester in research/).
+// The rules live in strategy.ts, the race's parameter set in params.ts (both shared with the
+// offline research code in research/).
 
 import { runBars, type Bar, type BarsState, type OrderInput } from './vendor/makefun-bars.ts';
 import { Strategy } from './strategy.ts';
