@@ -11,28 +11,8 @@
 // The rules live in strategy.ts (shared with the offline backtester in research/).
 
 import { runBars, type Bar, type BarsState, type OrderInput } from './vendor/makefun-bars.ts';
-import { Strategy, DEFAULTS, type Params } from './strategy.ts';
-
-export const PARAMS: Params = {
-  ...DEFAULTS,
-  emaSpan: 240,
-  warmBars: 120,
-  dipBps: 0,
-  momBps: 0,
-  flushBps: 150,
-  flushLook: 180,
-  fastSpan: 30,
-  reclaimBps: 30,
-  tpBps: 100000,
-  slBps: 100,
-  trailArmBps: 80,
-  trailBps: 40,
-  maxHold: 240,
-  size: 1,
-  maxEntries: 2,
-  cooldown: 30,
-  haltLossBps: 1,
-};
+import { Strategy } from './strategy.ts';
+import { PARAMS } from './params.ts';
 
 const PROBE_QUOTE = 1_234_567n; // 1.234567 USDC
 const BUY_SLIPPAGE_BPS = 60; // skip an entry the market gaps away from
